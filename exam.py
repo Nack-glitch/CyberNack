@@ -1,53 +1,39 @@
-import json
-import random
-import time
-import os
-
 def clear():
-    os.system("cls" if os.name == "nt" else "clear")
+    print("\n" * 50)
 
-def load_quiz(filename):
-    with open(filename, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-def start_exam(data):
-    questions = data["questions"]
+def start_exam():
+    questions = [
+        {"question": "What is 2 + 2?", "options": ["3", "4", "5", "6"], "answer": 2},
+        {"question": "What is the capital of Ethiopia?", "options": ["Addis Ababa", "Nairobi", "Cairo", "Khartoum"], "answer": 1},
+        {"question": "Which language is used for programming?", "options": ["Python", "English", "Spanish", "French"], "answer": 1}
+    ]
     score = 0
-    total = len(questions)
-    random.shuffle(questions)
     for q in questions:
         clear()
         print(q["question"])
         for i, opt in enumerate(q["options"], 1):
-            print(str(i) + ". " + opt)
+            print(f"{i}. {opt}")
         ans = input("Answer (1-4): ")
-        if ans.isdigit():
-            if int(ans) == q["answer"]:
-                score += 1
-        time.sleep(0.5)
+        if ans.isdigit() and int(ans) == q["answer"]:
+            score += 1
     clear()
-    print("Exam Finished")
-    print("Your Score:", score, "/", total)
+    print("Exam Finished!")
+    print(f"Your Score: {score} / {len(questions)}")
 
 def menu():
     clear()
     print("Offline Exam System")
     print("1. Start Exam")
     print("2. Exit")
-    choice = input("Select: ")
-    return choice
+    return input("Select: ")
 
 def main():
-    if not os.path.exists("quiz.json"):
-        print("quiz.json missing")
-        return
-    data = load_quiz("quiz.json")
     while True:
-        c = menu()
-        if c == "1":
-            start_exam(data)
-            input("Enter to continue...")
-        elif c == "2":
+        choice = menu()
+        if choice == "1":
+            start_exam()
+            input("Press Enter to continue...")
+        elif choice == "2":
             break
 
 main()
